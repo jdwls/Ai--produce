@@ -3,7 +3,7 @@ import os
 
 class Users:
     def __init__(self):
-        self.users_file = 'users.json'
+        self.users_file = os.path.join(os.path.dirname(__file__), 'users.json')
         if not os.path.exists(self.users_file):
             with open(self.users_file, 'w') as f:
                 json.dump({}, f)
