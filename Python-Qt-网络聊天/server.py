@@ -6,7 +6,7 @@ import os
 class ChatServer:
     def __init__(self):
         self.clients = {}  # {username: socket}
-        self.users_file = os.path.join(os.path.dirname(__file__), 'server_users.json')
+        self.users_file = os.path.join(os.path.dirname(__file__), 'json/server_users.json')
         if not os.path.exists(self.users_file):
             with open(self.users_file, 'w') as f:
                 json.dump({}, f)
