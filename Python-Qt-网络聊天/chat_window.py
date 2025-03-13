@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import (QWidget, QTextEdit, QLineEdit, QVBoxLayout,
                             QPushButton, QListWidget, QLabel, QHBoxLayout,
                             QToolButton, QScrollArea)
-from PyQt5.QtGui import QFont, QPixmap, QColor
+from PyQt5.QtGui import QFont, QPixmap, QColor, QPainter
 from PyQt5.QtCore import Qt
 import json
 
@@ -21,34 +21,76 @@ class ChatWindow(QWidget):
         self.setGeometry(300, 300, 1000, 700)
         self.setStyleSheet("""
             QWidget {
-                background-color: #F0F0F0;
+                background-color: #F5F5F5;
+                font-family: 'Segoe UI', sans-serif;
             }
             QTextEdit {
                 background-color: white;
-                border: 1px solid #CCCCCC;
-                border-radius: 5px;
-                padding: 5px;
+                border: 1px solid #E0E0E0;
+                border-radius: 8px;
+                padding: 8px;
+                font-size: 14px;
+                selection-background-color: #2196F3;
+                selection-color: white;
             }
             QLineEdit {
                 background-color: white;
-                border: 1px solid #CCCCCC;
-                border-radius: 15px;
-                padding: 5px 10px;
+                border: 1px solid #E0E0E0;
+                border-radius: 20px;
+                padding: 8px 16px;
+                font-size: 14px;
+                selection-background-color: #2196F3;
+                selection-color: white;
             }
             QPushButton {
-                background-color: #4CAF50;
+                background-color: #2196F3;
                 color: white;
                 border: none;
-                border-radius: 15px;
-                padding: 8px 16px;
+                border-radius: 20px;
+                padding: 8px 24px;
+                font-size: 14px;
+                min-width: 80px;
             }
             QPushButton:hover {
-                background-color: #45a049;
+                background-color: #1976D2;
+            }
+            QPushButton:pressed {
+                background-color: #1565C0;
             }
             QListWidget {
                 background-color: white;
-                border: 1px solid #CCCCCC;
+                border: 1px solid #E0E0E0;
+                border-radius: 8px;
+                padding: 4px;
+            }
+            QListWidget::item {
+                padding: 8px;
+                border-bottom: 1px solid #F0F0F0;
+            }
+            QListWidget::item:hover {
+                background-color: #F5F5F5;
+            }
+            QListWidget::item:selected {
+                background-color: #2196F3;
+                color: white;
+            }
+            QScrollBar:vertical {
+                background: #F5F5F5;
+                width: 10px;
+                margin: 0px 0px 0px 0px;
+            }
+            QScrollBar::handle:vertical {
+                background: #BDBDBD;
+                min-height: 20px;
                 border-radius: 5px;
+            }
+            QScrollBar::add-line:vertical,
+            QScrollBar::sub-line:vertical {
+                background: none;
+            }
+            QScrollBar::add-page:vertical,
+            QScrollBar::sub-page:vertical {
+                background: none;
             }
         """)
         
@@ -66,7 +108,23 @@ class ChatWindow(QWidget):
         # 用户信息
         userInfoLayout = QHBoxLayout()
         self.avatarLabel = QLabel()
-        self.avatarLabel.setPixmap(QPixmap(":/images/default_avatar.png").scaled(50, 50, Qt.KeepAspectRatio))
+        # 加载默认头像
+        try:
+            avatar = QPixmap(":/images/default_avatar.png")
+            if avatar.isNull():
+                raise Exception("Default avatar not found")
+        except:
+            # 创建圆形灰色默认头像
+            avatar = QPixmap(50, 50)
+            avatar.fill(Qt.transparent)
+            painter = QPainter(avatar)
+            painter.setRenderHint(QPainter.Antialiasing)
+            painter.setBrush(QColor("#CCCCCC"))
+            painter.setPen(Qt.NoPen)
+            painter.drawEllipse(0, 0, 50, 50)
+            painter.end()
+            
+        self.avatarLabel.setPixmap(avatar.scaled(50, 50, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         userInfoLayout.addWidget(self.avatarLabel)
         
         self.userInfo = QLabel('未登录')
@@ -170,28 +228,31 @@ class ChatWindow(QWidget):
                 if sender == self.current_user:
                     # 自己发送的消息
                     msg_html = f"""
-                    <div style="text-align: right; margin: 5px;">
+                    <div style="text-align: right; margin: 8px;">
                         <div style="display: inline-block; max-width: 70%; 
-                            background-color: #dcf8c6; 
-                            padding: 8px 12px;
-                            border-radius: 10px;
-                            margin-left: 30%;">
-                            <div style="font-size: 12px; color: #666;">{timestamp}</div>
-                            <div>{content}</div>
+                            background-color: #2196F3;
+                            padding: 12px 16px;
+                            border-radius: 12px;
+                            margin-left: 30%;
+                            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+                            color: white;">
+                            <div style="font-size: 12px; color: rgba(255,255,255,0.8);">{timestamp}</div>
+                            <div style="margin-top: 4px;">{content}</div>
                         </div>
                     </div>
                     """
                 else:
                     # 他人发送的消息
                     msg_html = f"""
-                    <div style="margin: 5px;">
+                    <div style="margin: 8px;">
                         <div style="display: inline-block; max-width: 70%; 
-                            background-color: white; 
-                            padding: 8px 12px;
-                            border-radius: 10px;
-                            margin-right: 30%;">
+                            background-color: white;
+                            padding: 12px 16px;
+                            border-radius: 12px;
+                            margin-right: 30%;
+                            box-shadow: 0 1px 3px rgba(0,0,0,0.12);">
                             <div style="font-size: 12px; color: #666;">{sender} · {timestamp}</div>
-                            <div>{content}</div>
+                            <div style="margin-top: 4px;">{content}</div>
                         </div>
                     </div>
                     """
