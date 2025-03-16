@@ -4,9 +4,9 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtGui import QFont
 import socket
 import json
-from users import Users
-from login_window import LoginWindow
-from chat_window import ChatWindow
+from .users import Users
+from .login_window import LoginWindow
+from .chat_window import ChatWindow
 
 class ChatClient:
     def __init__(self):

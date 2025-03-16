@@ -190,7 +190,7 @@ class LoginWindow(QWidget):
 
     def loadRememberedLogin(self):
         try:
-            with open('login_info.json', 'r') as f:
+            with open('json/login_info.json', 'r') as f:
                 data = json.load(f)
                 if data.get('remember'):
                     self.usernameInput.setText(data.get('username', ''))
@@ -206,12 +206,12 @@ class LoginWindow(QWidget):
                 'password': self.passwordInput.text(),
                 'remember': True
             }
-            with open('login_info.json', 'w') as f:
+            with open('json/login_info.json', 'w') as f:
                 json.dump(data, f)
         else:
             try:
                 import os
-                os.remove('login_info.json')
+                os.remove('json/login_info.json')
             except:
                 pass
 
