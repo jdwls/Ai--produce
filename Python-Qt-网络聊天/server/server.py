@@ -60,9 +60,15 @@ class ChatServer:
             json.dump(users, f)
             
     def broadcast_message(self, message):
+        import datetime
+        msg_data = {
+            'type': 'message',
+            'timestamp': datetime.datetime.now().strftime('%H:%M'),
+            'content': message
+        }
         for client in self.clients.values():
             try:
-                client.send(message.encode('utf-8'))
+                client.send(json.dumps(msg_data).encode('utf-8'))
             except:
                 continue
                 

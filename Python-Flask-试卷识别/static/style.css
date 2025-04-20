@@ -1,0 +1,73 @@
+/* 基础样式 */
+body {
+    font-family: 'Microsoft YaHei', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #333;
+}
+
+/* 上传区域样式 */
+.upload-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+/* 画布区域样式 */
+.canvas-section {
+    margin-bottom: 30px;
+}
+
+#templateCanvas {
+    border: 1px solid #ddd;
+    background-color: white;
+    margin-top: 10px;
+}
+
+.canvas-controls {
+    margin-top: 10px;
+}
+
+/* 按钮样式 */
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-right: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* 结果区域样式 */
+.result-section {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+/* 文件上传输入样式 */
+input[type="file"] {
+    margin-bottom: 10px;
+    display: block;
+}

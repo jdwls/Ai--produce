@@ -96,17 +96,19 @@ class ChatWindow(QWidget):
         
         # 主布局
         mainLayout = QHBoxLayout()
-        mainLayout.setContentsMargins(5, 5, 5, 5)
-        mainLayout.setSpacing(5)
+        mainLayout.setContentsMargins(8, 8, 8, 8)
+        mainLayout.setSpacing(8)
         
         # 侧边栏
         self.sidebar = QWidget()
         sidebarLayout = QVBoxLayout()
-        sidebarLayout.setContentsMargins(5, 5, 5, 5)
-        sidebarLayout.setSpacing(10)
+        sidebarLayout.setContentsMargins(8, 8, 8, 8)
+        sidebarLayout.setSpacing(8)
         
         # 用户信息
         userInfoLayout = QHBoxLayout()
+        userInfoLayout.setSpacing(8)
+        
         self.avatarLabel = QLabel()
         # 加载默认头像
         try:
@@ -115,42 +117,55 @@ class ChatWindow(QWidget):
                 raise Exception("Default avatar not found")
         except:
             # 创建圆形灰色默认头像
-            avatar = QPixmap(50, 50)
+            avatar = QPixmap(40, 40)
             avatar.fill(Qt.transparent)
             painter = QPainter(avatar)
             painter.setRenderHint(QPainter.Antialiasing)
             painter.setBrush(QColor("#CCCCCC"))
             painter.setPen(Qt.NoPen)
-            painter.drawEllipse(0, 0, 50, 50)
+            painter.drawEllipse(0, 0, 40, 40)
             painter.end()
             
-        self.avatarLabel.setPixmap(avatar.scaled(50, 50, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        self.avatarLabel.setPixmap(avatar.scaled(40, 40, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         userInfoLayout.addWidget(self.avatarLabel)
         
         self.userInfo = QLabel('未登录')
-        self.userInfo.setFont(QFont('Arial', 12, QFont.Bold))
+        self.userInfo.setFont(QFont('Arial', 11, QFont.Bold))
         userInfoLayout.addWidget(self.userInfo)
         sidebarLayout.addLayout(userInfoLayout)
         
         # 用户列表
-        sidebarLayout.addWidget(QLabel('在线用户'))
+        userListLabel = QLabel('在线用户')
+        userListLabel.setStyleSheet("font-size: 12px; color: #666;")
+        sidebarLayout.addWidget(userListLabel)
+        
         self.userList = QListWidget()
         self.userList.setStyleSheet("""
+            QListWidget {
+                border: 1px solid #E0E0E0;
+                border-radius: 4px;
+                padding: 4px;
+            }
             QListWidget::item {
-                padding: 5px;
+                padding: 6px;
+                border-bottom: 1px solid #F0F0F0;
             }
             QListWidget::item:hover {
-                background-color: #E0E0E0;
+                background-color: #F5F5F5;
+            }
+            QListWidget::item:selected {
+                background-color: #2196F3;
+                color: white;
             }
         """)
-        sidebarLayout.addWidget(self.userList)
+        sidebarLayout.addWidget(self.userList, 1)
         
         self.sidebar.setLayout(sidebarLayout)
         
         # 聊天区域
         chatLayout = QVBoxLayout()
-        chatLayout.setContentsMargins(5, 5, 5, 5)
-        chatLayout.setSpacing(5)
+        chatLayout.setContentsMargins(8, 0, 0, 0)
+        chatLayout.setSpacing(8)
         
         # 聊天显示区域
         self.chatDisplay = QTextEdit()
@@ -163,7 +178,7 @@ class ChatWindow(QWidget):
         
         # 输入区域
         inputLayout = QHBoxLayout()
-        inputLayout.setSpacing(5)
+        inputLayout.setSpacing(8)
         
         # 表情按钮
         self.emojiButton = QToolButton()
@@ -183,10 +198,24 @@ class ChatWindow(QWidget):
         
         self.messageInput = QLineEdit()
         self.messageInput.setPlaceholderText("输入消息...")
+        self.messageInput.setStyleSheet("""
+            QLineEdit {
+                padding: 8px 12px;
+                font-size: 14px;
+                border-radius: 20px;
+            }
+        """)
         self.messageInput.returnPressed.connect(self.sendMessage)
         inputLayout.addWidget(self.messageInput, 1)
         
         self.sendButton = QPushButton('发送')
+        self.sendButton.setStyleSheet("""
+            QPushButton {
+                padding: 8px 16px;
+                font-size: 14px;
+                min-width: 80px;
+            }
+        """)
         self.sendButton.clicked.connect(self.sendMessage)
         inputLayout.addWidget(self.sendButton)
         
@@ -195,21 +224,15 @@ class ChatWindow(QWidget):
         chatLayout.addLayout(inputLayout)
         
         mainLayout.addWidget(self.sidebar, 1)
-        mainLayout.addLayout(chatLayout, 3)
+        mainLayout.addLayout(chatLayout, 4)
         
         self.setLayout(mainLayout)
         
     def sendMessage(self):
-        if not hasattr(self.parent, 'client_socket'):
-            return
-            
         message = self.messageInput.text()
         if message:
-            try:
-                self.parent.client_socket.send(message.encode('utf-8'))
-                self.messageInput.clear()
-            except:
-                self.chatDisplay.append('发送失败，请检查网络连接')
+            self.parent.sendMessage(message)
+            self.messageInput.clear()
             
     def displayMessage(self, message):
         try:

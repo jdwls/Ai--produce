@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>答题卡模板管理</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>答题卡模板管理</h1>
+        
+        <div class="upload-section">
+            <h2>上传答题卡模板</h2>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" id="templateFile" accept="image/*">
+                <button type="button" onclick="loadImage()">加载图片</button>
+            </form>
+        </div>
+
+        <div class="canvas-section">
+            <h2>绘制答案区域</h2>
+            <canvas id="templateCanvas"></canvas>
+            <div class="canvas-controls">
+                <button id="rectBtn">绘制矩形</button>
+                <button id="saveBtn">保存模板</button>
+            </div>
+        </div>
+
+        <div class="result-section">
+            <h2>已保存模板</h2>
+            <div id="templateList">
+                {% if templates %}
+                    <ul>
+                        {% for template in templates %}
+                            <li>{{ template }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>暂无保存的模板</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

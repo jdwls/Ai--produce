@@ -8,7 +8,7 @@ from .users import Users
 from .login_window import LoginWindow
 from .chat_window import ChatWindow
 
-class ChatClient:
+class ChatClient(QWidget):
     def __init__(self):
         super().__init__()
         self.users = Users()
@@ -42,6 +42,13 @@ class ChatClient:
         
     def displayMessage(self, message):
         self.chatWindow.displayMessage(message)
+        
+    def sendMessage(self, message):
+        if hasattr(self, 'client_socket'):
+            try:
+                self.client_socket.send(message.encode('utf-8'))
+            except:
+                print("消息发送失败")
             
     def closeEvent(self, event):
         if hasattr(self, 'client_socket'):
